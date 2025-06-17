@@ -17,7 +17,7 @@ const port = process.env.PORT || 5000;
 const dbUrl = process.env.MONGO_COMPASS_URL;
 const salt = process.env.SALT;
 const defaultImagePath =
-  process.env.DEFAULT_USER_IMAGE_PATH || 'public/images/users/default.png';
+  process.env.DEFAULT_USER_IMAGE_PATH || 'public/default.png';
 const jwtAccessKey = process.env.JWT_ACCESS_KEY;
 const smtpUser = process.env.SMTP_USERNAME || '';
 const smtpPassword = process.env.SMTP_PASSWORD || '';

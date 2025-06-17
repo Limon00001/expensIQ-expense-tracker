@@ -14,7 +14,7 @@ const { rateLimit } = require('express-rate-limit');
 const cors = require('cors');
 
 // Internal Dependencies
-const userRouter = require('./routes/auth.route');
+const authRouter = require('./routes/auth.route');
 const seedRouter = require('./routes/seed.route');
 const { clientError, serverError } = require('./middlewares/errors.middleware');
 const { clientSite } = require('./secret');
@@ -45,7 +45,7 @@ app.use(express.urlencoded({ limit: '100mb', extended: true }));
 
 // Routes
 app.use('/api/v1/seed', seedRouter);
-app.use('/api/v1/users', userRouter);
+app.use('/api/v1/auth', authRouter);
 
 // Client error handler
 app.use(clientError);
