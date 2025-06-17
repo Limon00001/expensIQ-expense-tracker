@@ -12,6 +12,7 @@ import { FiEye, FiEyeOff, FiLock } from 'react-icons/fi';
 import { Link, useNavigate } from 'react-router-dom';
 
 // Internal Imports
+import Input from '../../components/Inputs/Input';
 import AuthLayout from '../../components/layouts/AuthLayout';
 
 // ResetPassword Component
@@ -63,18 +64,14 @@ const ResetPassword = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* New Password Field */}
           <div className="relative">
-            <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
+            <Input
               type={showPassword.password ? 'text' : 'password'}
               name="password"
               placeholder="New password"
+              icon={<FiLock />}
               value={formData.password}
               onChange={handleInputChange}
               disabled={loading}
-              className={`w-full px-10 py-2.5 bg-white rounded-lg border border-gray-200 focus:border-teal-500 focus:outline-none ${
-                loading ? 'cursor-not-allowed' : ''
-              }`}
-              required
             />
             <button
               type="button"
@@ -92,18 +89,14 @@ const ResetPassword = () => {
 
           {/* Confirm Password Field */}
           <div className="relative">
-            <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
+            <Input
               type={showPassword.confirmPassword ? 'text' : 'password'}
               name="confirmPassword"
               placeholder="Confirm password"
+              icon={<FiLock />}
               value={formData.confirmPassword}
               onChange={handleInputChange}
               disabled={loading}
-              className={`w-full px-10 py-2.5 bg-white rounded-lg border border-gray-200 focus:border-teal-500 focus:outline-none ${
-                loading ? 'cursor-not-allowed' : ''
-              }`}
-              required
             />
             <button
               type="button"

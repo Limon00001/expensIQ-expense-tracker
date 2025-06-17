@@ -12,6 +12,7 @@ import { FiMail } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
 // Internal Imports
+import Input from '../../components/Inputs/Input';
 import AuthLayout from '../../components/layouts/AuthLayout';
 
 // ForgotPassword Component
@@ -37,18 +38,14 @@ const ForgotPassword = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Email Input Field */}
           <div className="relative">
-            <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
-              type="email"
+            <Input
+              type={'email'}
               name="email"
               placeholder="Enter your email"
+              icon={<FiMail />}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={loading}
-              className={`w-full px-10 py-2.5 bg-white rounded-lg border border-gray-200 focus:border-teal-500 focus:outline-none ${
-                loading ? 'cursor-not-allowed' : ''
-              }`}
-              required
             />
           </div>
 

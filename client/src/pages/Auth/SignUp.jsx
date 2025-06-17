@@ -12,6 +12,7 @@ import { FiEye, FiEyeOff, FiLock, FiMail, FiUser } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
 // Internal Imports
+import Input from '../../components/Inputs/Input';
 import AuthLayout from '../../components/layouts/AuthLayout';
 
 // SignUp Component
@@ -56,52 +57,40 @@ const SignUp = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Name Field */}
           <div className="relative">
-            <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
+            <Input
+              type={'text'}
               name="name"
               placeholder="Full Name"
-              disabled={loading}
-              className={`w-full px-10 py-2.5 bg-white rounded-lg border border-gray-200 focus:border-teal-500 focus:outline-none ${
-                loading ? 'cursor-not-allowed' : ''
-              }`}
-              required
+              icon={<FiUser />}
               value={formData.name}
               onChange={handleInputChange}
+              disabled={loading}
             />
           </div>
 
           {/* Email Field */}
           <div className="relative">
-            <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
-              type="email"
+            <Input
+              type={'email'}
               name="email"
               placeholder="Email"
-              disabled={loading}
-              className={`w-full px-10 py-2.5 bg-white rounded-lg border border-gray-200 focus:border-teal-500 focus:outline-none ${
-                loading ? 'cursor-not-allowed' : ''
-              }`}
-              required
+              icon={<FiMail />}
               value={formData.email}
               onChange={handleInputChange}
+              disabled={loading}
             />
           </div>
 
           {/* Password Field */}
           <div className="relative">
-            <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
+            <Input
               type={showPassword ? 'text' : 'password'}
               name="password"
               placeholder="Password"
-              disabled={loading}
-              className={`w-full px-10 py-2.5 bg-white rounded-lg border border-gray-200 focus:border-teal-500 focus:outline-none ${
-                loading ? 'cursor-not-allowed' : ''
-              }`}
-              required
+              icon={<FiLock />}
               value={formData.password}
               onChange={handleInputChange}
+              disabled={loading}
             />
             <button
               type="button"
@@ -114,18 +103,14 @@ const SignUp = () => {
 
           {/* Confirm Password Field */}
           <div className="relative">
-            <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
+            <Input
               type={showConfirm ? 'text' : 'password'}
               name="confirmPassword"
               placeholder="Confirm Password"
-              disabled={loading}
-              className={`w-full px-10 py-2.5 bg-white rounded-lg border border-gray-200 focus:border-teal-500 focus:outline-none ${
-                loading ? 'cursor-not-allowed' : ''
-              }`}
-              required
+              icon={<FiLock />}
               value={formData.confirmPassword}
               onChange={handleInputChange}
+              disabled={loading}
             />
             <button
               type="button"

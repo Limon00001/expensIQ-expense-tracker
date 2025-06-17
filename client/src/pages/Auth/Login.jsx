@@ -12,6 +12,7 @@ import { FiEye, FiEyeOff, FiLock, FiMail } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
 // Internal Imports
+import Input from '../../components/Inputs/Input';
 import AuthLayout from '../../components/layouts/AuthLayout';
 
 // Login Component
@@ -50,35 +51,27 @@ const Login = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Email Input Field */}
           <div className="relative">
-            <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
+            <Input
               type="email"
               name="email"
               placeholder="Email"
-              disabled={loading}
-              className={`w-full px-10 py-2.5 bg-white rounded-lg border border-gray-200 focus:border-teal-500 focus:outline-none ${
-                loading ? 'cursor-not-allowed' : ''
-              }`}
-              required
+              icon={<FiMail />}
               value={formData.email}
               onChange={handleInputChange}
+              disabled={loading}
             />
           </div>
 
           {/* Password Input Field with Password Visibility Toggle */}
           <div className="relative">
-            <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
+            <Input
               type={showPassword ? 'text' : 'password'}
               name="password"
               placeholder="Password"
-              disabled={loading}
-              className={`w-full px-10 py-2.5 bg-white rounded-lg border border-gray-200 focus:border-teal-500 focus:outline-none ${
-                loading ? 'cursor-not-allowed' : ''
-              }`}
-              required
+              icon={<FiLock />}
               value={formData.password}
               onChange={handleInputChange}
+              disabled={loading}
             />
             <button
               type="button"
