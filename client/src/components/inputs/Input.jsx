@@ -18,7 +18,6 @@ const Input = ({
   value,
   onChange,
   disabled = false,
-  required = true,
 }) => {
   const [show, setShow] = useState(false);
   const isPassword = type === 'password';
@@ -41,7 +40,7 @@ const Input = ({
         className={`w-full px-10 py-2.5 bg-white rounded-lg border border-gray-200 focus:border-teal-500 focus:outline-none ${
           disabled ? 'cursor-not-allowed opacity-50' : ''
         }`}
-        required={required}
+        // required={required}
       />
       {isPassword && (
         <button

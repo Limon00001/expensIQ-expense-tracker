@@ -13,10 +13,14 @@ import { Link } from 'react-router-dom';
 
 // Internal Imports
 import Input from '../../components/Inputs/Input';
+import ProfilePictureUploadSelector from '../../components/inputs/ProfilePictureUploadSelector';
 import AuthLayout from '../../components/layouts/AuthLayout';
+import { validateEmail, validatePassword } from '../../utils/helpers';
 
 // SignUp Component
 const SignUp = () => {
+  const [profilePic, setProfilePic] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -26,20 +30,88 @@ const SignUp = () => {
     password: '',
     confirmPassword: '',
   });
+  const [errors, setErrors] = useState({
+    profilePic: '',
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  // Handle Image Upload
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setErrors((prev) => ({ ...prev, profilePic: '' }));
+    if (file) {
+      setProfilePic(file);
+      setPreview(URL.createObjectURL(file));
+    }
+  };
+
+  // Remove selected image
+  const removeImage = () => {
+    setProfilePic(null);
+    setPreview(null);
+    setErrors((prev) => ({ ...prev, profilePic: '' }));
+  };
 
   // Handle Input Change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: '' }));
   };
 
   // Handle Form Submission
   const handleSubmit = (e) => {
     e.preventDefault();
+    const validationErrors = {
+      profilePic: '',
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    };
+    let hasError = false;
 
+    if (!profilePic) {
+      validationErrors.profilePic = 'Profile picture is required.';
+      hasError = true;
+    }
+    if (!formData.name.trim()) {
+      validationErrors.name = 'Full name is required.';
+      hasError = true;
+    }
+    if (!formData.email.trim()) {
+      validationErrors.email = 'Email is required.';
+      hasError = true;
+    } else if (!validateEmail(formData.email)) {
+      validationErrors.email = 'Please enter a valid email.';
+      hasError = true;
+    }
+    if (!formData.password.trim()) {
+      validationErrors.password = 'Password is required.';
+      hasError = true;
+    } else if (!validatePassword(formData.password)) {
+      validationErrors.password = 'Password must meet requirements.';
+      hasError = true;
+    }
+    if (!formData.confirmPassword.trim()) {
+      validationErrors.confirmPassword = 'Please confirm password.';
+      hasError = true;
+    } else if (formData.password !== formData.confirmPassword) {
+      validationErrors.confirmPassword = 'Passwords do not match.';
+      hasError = true;
+    }
+
+    setErrors(validationErrors);
+    if (hasError) return;
+
+    setLoading(true);
     try {
-      setLoading(true);
-    } catch (error) {
+      // TODO: submit form
+    } catch (err) {
+      // handle error
     } finally {
       setLoading(false);
     }
@@ -47,18 +119,26 @@ const SignUp = () => {
 
   return (
     <AuthLayout>
-      <div className="lg:w-[70%] h-3/4 md:h-full flex flex-col justify-center">
+      <div className="lg:w-[70%] h-auto mt-4 md:h-full flex flex-col justify-center">
         <h3 className="text-xl font-semibold text-black">Create an Account</h3>
-        <p className="text-xs text-slate-700 mt-[5px] mb-6">
+        <p className="text-xs text-slate-700 mt-1 mb-6">
           Enter your details to sign up
         </p>
 
-        {/* Sign Up Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Profile Picture Upload */}
+          <ProfilePictureUploadSelector
+            preview={preview}
+            removeImage={removeImage}
+            onImageChange={handleImageChange}
+            errors={errors}
+            loading={loading}
+          />
+
           {/* Name Field */}
-          <div className="relative">
+          <div>
             <Input
-              type={'text'}
+              type="text"
               name="name"
               placeholder="Full Name"
               icon={<FiUser />}
@@ -66,12 +146,15 @@ const SignUp = () => {
               onChange={handleInputChange}
               disabled={loading}
             />
+            {errors.name && (
+              <p className="text-sm text-red-500 mt-1">{errors.name}</p>
+            )}
           </div>
 
           {/* Email Field */}
-          <div className="relative">
+          <div>
             <Input
-              type={'email'}
+              type="email"
               name="email"
               placeholder="Email"
               icon={<FiMail />}
@@ -79,49 +162,64 @@ const SignUp = () => {
               onChange={handleInputChange}
               disabled={loading}
             />
+            {errors.email && (
+              <p className="text-sm text-red-500 mt-1">{errors.email}</p>
+            )}
           </div>
 
           {/* Password Field */}
-          <div className="relative">
-            <Input
-              type={showPassword ? 'text' : 'password'}
-              name="password"
-              placeholder="Password"
-              icon={<FiLock />}
-              value={formData.password}
-              onChange={handleInputChange}
-              disabled={loading}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
-            >
-              {showPassword ? <FiEyeOff /> : <FiEye />}
-            </button>
+          <div>
+            <div className="relative">
+              <Input
+                type={showPassword ? 'text' : 'password'}
+                name="password"
+                placeholder="Password"
+                icon={<FiLock />}
+                value={formData.password}
+                onChange={handleInputChange}
+                disabled={loading}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                {showPassword ? <FiEyeOff /> : <FiEye />}
+              </button>
+            </div>
+            {errors.password && (
+              <p className="text-sm text-red-500 mt-1">{errors.password}</p>
+            )}
           </div>
 
           {/* Confirm Password Field */}
-          <div className="relative">
-            <Input
-              type={showConfirm ? 'text' : 'password'}
-              name="confirmPassword"
-              placeholder="Confirm Password"
-              icon={<FiLock />}
-              value={formData.confirmPassword}
-              onChange={handleInputChange}
-              disabled={loading}
-            />
-            <button
-              type="button"
-              onClick={() => setShowConfirm((prev) => !prev)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
-            >
-              {showConfirm ? <FiEyeOff /> : <FiEye />}
-            </button>
+          <div>
+            <div className="relative">
+              <Input
+                type={showConfirm ? 'text' : 'password'}
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                icon={<FiLock />}
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+                disabled={loading}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirm(!showConfirm)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                {showConfirm ? <FiEyeOff /> : <FiEye />}
+              </button>
+            </div>
+            {errors.confirmPassword && (
+              <p className="text-sm text-red-500 mt-1">
+                {errors.confirmPassword}
+              </p>
+            )}
           </div>
 
-          {/* Sign Up Button */}
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
@@ -130,16 +228,15 @@ const SignUp = () => {
             }`}
           >
             {loading ? (
-              <div className="flex items-center justify-center gap-4">
+              <div className="flex items-center justify-center gap-2">
                 <AiOutlineLoading3Quarters className="animate-spin" />
-                <span>Signing up ...</span>
+                <span>Signing up...</span>
               </div>
             ) : (
               'Sign Up'
             )}
           </button>
 
-          {/* Redirect to Login */}
           <p className="text-center text-sm text-gray-600">
             Already have an account?{' '}
             <Link
@@ -158,5 +255,4 @@ const SignUp = () => {
   );
 };
 
-// Export
 export default SignUp;

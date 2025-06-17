@@ -14,11 +14,13 @@ import { Link } from 'react-router-dom';
 // Internal Imports
 import Input from '../../components/Inputs/Input';
 import AuthLayout from '../../components/layouts/AuthLayout';
+import { validateEmail } from '../../utils/helpers';
 
 // Login Component
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState({ email: '', password: '' });
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -28,6 +30,30 @@ const Login = () => {
   const handleSubmit = (e) => {
     // Prevent Form Submission
     e.preventDefault();
+
+    // Form Validation
+    let hasError = false;
+    const newError = { email: '', password: '' };
+
+    // Email Validation
+    if (!validateEmail(formData.email)) {
+      newError.email = 'Please enter a valid email address.';
+      hasError = true;
+    }
+
+    // Password Validation
+    if (!formData.password) {
+      newError.password = 'Password is required.';
+      hasError = true;
+    }
+
+    setError(newError);
+
+    // Return if there are errors
+    if (hasError) return;
+
+    // TODO: proceed with API call
+    setLoading(true);
   };
 
   // Input Change Handler
@@ -37,6 +63,7 @@ const Login = () => {
       ...formData,
       [name]: value,
     });
+    setError((prev) => ({ ...prev, [name]: '' }));
   };
 
   return (
@@ -60,26 +87,34 @@ const Login = () => {
               onChange={handleInputChange}
               disabled={loading}
             />
+            {error.email && (
+              <p className="text-sm text-red-500 mt-1">{error.email}</p>
+            )}
           </div>
 
           {/* Password Input Field with Password Visibility Toggle */}
-          <div className="relative">
-            <Input
-              type={showPassword ? 'text' : 'password'}
-              name="password"
-              placeholder="Password"
-              icon={<FiLock />}
-              value={formData.password}
-              onChange={handleInputChange}
-              disabled={loading}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
-            >
-              {showPassword ? <FiEyeOff /> : <FiEye />}
-            </button>
+          <div>
+            <div className="relative">
+              <Input
+                type={showPassword ? 'text' : 'password'}
+                name="password"
+                placeholder="Password"
+                icon={<FiLock />}
+                value={formData.password}
+                onChange={handleInputChange}
+                disabled={loading}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
+              >
+                {showPassword ? <FiEyeOff /> : <FiEye />}
+              </button>
+            </div>
+            {error.password && (
+              <p className="text-sm text-red-500 mt-1">{error.password}</p>
+            )}
           </div>
 
           {/* Remember Me and Forgot Password */}

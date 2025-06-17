@@ -6,6 +6,7 @@
  */
 
 // External Imports
+import { Toaster } from 'react-hot-toast';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 // Internal Imports
@@ -21,6 +22,7 @@ import Income from './pages/Dashboard/Income';
 const App = () => {
   return (
     <div>
+      <Toaster position="top-right" reverseOrder={true} />
       <Routes>
         <Route path="/" element={<Root />} />
         <Route path="/login" exact element={<Login />} />

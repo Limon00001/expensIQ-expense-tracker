@@ -14,15 +14,28 @@ import { Link } from 'react-router-dom';
 // Internal Imports
 import Input from '../../components/Inputs/Input';
 import AuthLayout from '../../components/layouts/AuthLayout';
+import { validateEmail } from '../../utils/helpers';
 
 // ForgotPassword Component
 const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
 
   // Form Submission Handler
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError('');
+
+    if (!validateEmail(email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
+    // proceed to send instructions
+    setLoading(true);
+    // TODO: API call to send reset email
+    // on success/failure, setLoading(false) and handle errors
   };
 
   return (
@@ -37,16 +50,20 @@ const ForgotPassword = () => {
         {/* Reset Password Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Email Input Field */}
-          <div className="relative">
+          <div>
             <Input
-              type={'email'}
+              type="email"
               name="email"
               placeholder="Enter your email"
               icon={<FiMail />}
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setError('');
+              }}
               disabled={loading}
             />
+            {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
           </div>
 
           {/* Submit Button */}
